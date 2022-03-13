@@ -1,0 +1,6 @@
+signup:
+  username: Nazwa
+  password: Hasło
+  signup: Zarejestruj!
+  invalid:
+    token: Niepoprawny CSRF Token

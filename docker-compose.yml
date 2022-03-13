@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  maria_db:
+    container_name: city-in-pill-mariadb
+    image: mariadb:10.7.3
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpassword
+      - MARIADB_DATABASE=city_in_pill
+      - MARIADB_USER=city_user
+      - MARIADB_PASSWORD=city_password
+    ports:
+      - '3367:3306'
+
+  php:
+    container_name: city-in-pill-php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    restart: on-failure
+    depends_on:
+    - maria_db
+#    env_file:
+#    - .env
+    volumes:
+      - './:/var/www/html/CityInPill:rw'
+      - './docker/apache/000-default.conf:/etc/apache2/sites-available/default.conf:ro'
+#    user: 1000:1000
+    ports:
+      - 9000:80

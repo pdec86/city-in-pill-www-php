@@ -1,0 +1,6 @@
+login:
+  username: Username
+  password: Password
+  login: Login
+home:
+  welcome: Welcome %name%

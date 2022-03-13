@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="container align-content-center">
+    <div class="row">
+        {% if error %}
+        <div class="col-12">{{ error|trans({}, 'signup') }}</div>
+        {% endif %}
+    </div>
+
+    <form class="row justify-content-center" action="{{ path('user_signup') }}" method="post">
+        <label class="col-1 m-2 text-primary text-end" for="username">{{ 'signup.username'|trans({}, 'signup') }}
+            :</label>
+        <input class="col-3 m-2" type="text" id="username" name="username" />
+
+        <!-- Force next columns to break to new line -->
+        <div class="w-100"></div>
+
+        <label class="col-1 m-2 text-primary text-end" for="password">{{ 'signup.password'|trans({}, 'signup') }}
+            :</label>
+        <input class="col-3 m-2" type="password" id="password" name="password"/>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('signup') }}">
+
+        {# If you want to control the URL the user is redirected to on success #}
+        {# <input type="hidden" name="_target_path" value="{{ path('home') }}"/> #}
+
+        <div class="w-100"></div>
+
+        <button class="btn btn-primary col-1 offset-3" type="submit">
+            {{ 'signup.signup'|trans({}, 'signup') }}
+        </button>
+    </form>
+</div>
+{% endblock %}
