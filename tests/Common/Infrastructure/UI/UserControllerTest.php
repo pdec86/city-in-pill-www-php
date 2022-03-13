@@ -82,27 +82,38 @@ class UserControllerTest extends WebTestCase
         $userRepository = $container->get(UserRepository::class);
         /** @var CreateNewUserService $service */
         $service = $container->get(CreateNewUserService::class);
-        $service->execute('user1', 'somepass1');
+        $service->execute('user', 'somepass1');
 
-        $testUser = $userRepository->loadUserByIdentifier('user1');
+        $testUser = $userRepository->loadUserByIdentifier('user');
         $this->assertNotEmpty($testUser);
 
         $client->loginUser($testUser);
 
-        // Request a specific page
-        $client->request(
-            'POST',
-            '/api/user/contact',
-            [
-                'username' => 'user1',
-                'first_name' => 'Przemek',
-                'last_name' => 'Przemek',
-                'phone' => '+48 500 100 200',
-                'email' => 'pp@mail.com'],
-            [],
-            ['CONTENT_TYPE' => 'application/x-www-form-urlencoded']);
+        $bodyJson = json_encode([
+            'username' => 'user',
+            'first_name' => 'Przemek',
+            'last_name' => 'Przemek',
+            'phone' => '+48 500 100 200',
+            'email' => 'pp@mail.com']);
 
+        $bodyInvalidUserJson = json_encode([
+            'username' => 'user1',
+            'first_name' => 'Przemek',
+            'last_name' => 'Przemek',
+            'phone' => '+48 500 100 200',
+            'email' => 'pp@mail.com']);
+
+        // Request a specific page
+        $client->request('POST', '/api/user/contact', [], [], ['CONTENT_TYPE' => 'application/json'], $bodyJson);
         $this->assertResponseStatusCodeSame(201);
+
+        // Request a specific page
+        $client->request('POST', '/api/user/contact', [], [], ['CONTENT_TYPE' => 'application/json'], $bodyJson);
+        $this->assertResponseStatusCodeSame(201);
+
+        // Request a specific page
+        $client->request('POST', '/api/user/contact', [], [], ['CONTENT_TYPE' => 'application/json'], $bodyInvalidUserJson);
+        $this->assertResponseStatusCodeSame(400);
     }
 
     public function testAddUserContactNoGet()

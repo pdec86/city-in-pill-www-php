@@ -40,10 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var UserContact User contact details
+     * @var UserContact|null User contact details
      * @ORM\OneToOne(targetEntity="App\Common\Domain\Model\UserContact", fetch="EAGER", cascade={"all"}, mappedBy="user")
      */
-    private UserContact $contact;
+    private ?UserContact $contact = null;
 
     /**
      * @return int
@@ -77,9 +77,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return UserContact
+     * @return UserContact|null
      */
-    public function getContact(): UserContact
+    public function getContact(): ?UserContact
     {
         return $this->contact;
     }

@@ -4,6 +4,7 @@ namespace App\Common\Infrastructure\UI;
 
 use App\Common\Application\AddUserContactService;
 use App\Common\Application\CreateNewUserService;
+use App\Common\Application\Exception\UserNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,12 +44,24 @@ class UserController extends AbstractController
      */
     public function addUserContact(Request $request, AddUserContactService $service): Response
     {
-        $username = $request->get('username');
-        $firstName = $request->get('first_name');
-        $lastName = $request->get('last_name');
-        $phone = $request->get('phone', null);
-        $email = $request->get('email', null);
-        $service->execute($username, $firstName, $lastName, $phone, $email);
+        $body = $request->getContent(false);
+        $bodyDecoded = json_decode($body, true);
+
+        $username = $bodyDecoded['username'];
+        $firstName = $bodyDecoded['first_name'];
+        $lastName = $bodyDecoded['last_name'];
+        $phone = array_key_exists('phone', $bodyDecoded) ? $bodyDecoded['phone'] : null;
+        $email = array_key_exists('email', $bodyDecoded) ? $bodyDecoded['email'] : null;
+
+        try {
+            $service->execute($username, $firstName, $lastName, $phone, $email);
+        } catch (UserNotFoundException $e) {
+            $response = [
+                'error' => 'USER_100',
+                'message' => 'User not found'
+            ];
+            return new Response(json_encode($response), 400);
+        }
 
         return new Response('{}', 201);
     }

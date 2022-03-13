@@ -75,11 +75,27 @@ class UserContact
     }
 
     /**
+     * @param string $firstName
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
      * @return string
      */
     public function getLastName(): string
     {
         return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 
     /**
@@ -91,10 +107,26 @@ class UserContact
     }
 
     /**
+     * @param Phone|null $phone
+     */
+    public function setPhone(?Phone $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    /**
      * @return Email|null
      */
     public function getEmail(): ?Email
     {
         return $this->email;
+    }
+
+    /**
+     * @param Email|null $email
+     */
+    public function setEmail(?Email $email): void
+    {
+        $this->email = $email;
     }
 }
